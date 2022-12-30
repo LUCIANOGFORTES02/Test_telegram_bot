@@ -3,10 +3,17 @@ import telebot
 import time
 import json
 
+menu="""Escolha uma das opções (Clique no item):
+        /opcao1 Fazer um pedido
+        /opcao2 Reclamar de um pedido
+        /opcao3 Fazer uma avaliação
+        """
+
 class Bot:
     def __init__ (self):
         token='5810812199:AAFoebmRT8YjizOCA1DdKVScn4I7cRpoyoM'
         self.url_base = f'https://api.telegram.org/bot{token}/'
+        
 # Quando se coloca uma / e uma palavra se torna um link
 
 #iniciar bot
@@ -19,7 +26,8 @@ class Bot:
                 for mensagem in mensagens:
                         update_id = mensagem ['update_id'] 
                         chat_id = mensagem ['message']['from']['id']#Para quem vai enviar a mensagem
-                        resposta = self.criarResposta()
+                        first_message = mensagem['message']['message_id']==1 #Para saber se é a primeira mensagem
+                        resposta = self.criarResposta(mensagem,first_message)
                         print(resposta)
                         self.responder(resposta,chat_id)
 
@@ -30,12 +38,25 @@ class Bot:
             #Adiciona um parâmetro que vai permitir pegar apenas a última mesagem
             link_requisicao = f'{link_requisicao}&offset={update_id+1}'
         resultado =requests.get(link_requisicao)
-        print(json.loads(resultado.content))
+        print(json.loads(resultado.content))#Método que retorna um dicionário
         return json.loads(resultado.content)
 
 #Criar uma resposta 
-    def criarResposta (self):
-        return "olá"
+    def criarResposta (self,mensagem,first):
+        mensagem=mensagem['message']['text']
+        if first==True or mensagem.lower() == "menu":
+            return menu
+        elif mensagem == "/opcao1":
+            return f'Pedido realizado'
+        elif mensagem == "/opcao2":
+            return f'Reclamação concluída'
+        elif mensagem == "/opcao3":
+            return f'Avaliação concluída'
+        return f'Digite "menu"'
+    
+    
+
+    
 #Responder
     def responder(self,resposta,chat_id):
         #enviar
