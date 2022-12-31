@@ -1,10 +1,10 @@
 import requests 
-import telebot 
+import webbrowser as wb
 import time
 import json
 
 menu="""Escolha uma das opções (Clique no item):
-        /opcao1 Fazer um pedido
+        /opcao1 Fazer um pedido no ifood
         /opcao2 Reclamar de um pedido
         /opcao3 Fazer uma avaliação
         """
@@ -47,8 +47,10 @@ class Bot:
         if first==True or mensagem.lower() == "menu":
             return menu
         elif mensagem == "/opcao1":
+            wb.open("https://www.ifood.com.br/inicio")
             return f'Pedido realizado'
         elif mensagem == "/opcao2":
+            wb.open("https://www.reclameaqui.com.br/")
             return f'Reclamação concluída'
         elif mensagem == "/opcao3":
             return f'Avaliação concluída'
